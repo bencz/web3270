@@ -99,8 +99,16 @@ SignalR as a structured snapshot, and rendered on an HTML5 canvas.
   false → true transitions).
 - Single shared `AudioContext` for beeps to avoid resource exhaustion.
 - AID buttons in the toolbar: Enter, Clear, PA1-PA3, PF1-PF12.
-- Keyboard mappings: F1-F12 → PF1-PF12, Shift+F1-F12 → PF13-PF24,
-  Esc → Clear, Tab → next unprotected field, arrow keys move the cursor.
+- Keyboard mappings:                                                                                  
+  - **F1-F12** → PF1-PF12, **Shift+F1-F12** → PF13-PF24                                               
+  - **Esc** → Clear                                                                                   
+  - **PageUp / PageDown** → PF7 / PF8 (ISPF scroll convention)                                        
+  - **Tab** → next unprotected field                                                                  
+  - **Home** → first unprotected field                                                                
+  - **End** → last typed position in the current field                                                
+  - **Backspace** → erase previous char (NUL fill, MDT set)                                           
+  - **Delete** → delete char at cursor and pull the rest of the field left                            
+  - **Arrow keys** → move the cursor cell-by-cell (wraps at edges)  
 - Per-session stream recorder writes a hex+ASCII dump of every TN3270
   record (in/out) to `traces/<timestamp>_<connectionId>.log` when enabled.
   Useful for offline parser debugging.
@@ -159,7 +167,7 @@ enables it. Override at runtime with the standard ASP.NET Core env var:
 | `mainframe.hercules-390.org`  | 3270 | Hercules + MVS 3.8j  |
 | `tn3270.themainframe.org`     | 23   | z/OS                 |
 
-> ⚠️ Do **not** point this client at `pub400.com`. That host is an IBM i
+> Do **not** point this client at `pub400.com`. That host is an IBM i
 > (AS/400) and speaks **TN5250** — a different protocol. The TCP and
 > Telnet handshake will succeed, the screen will be empty.
 
@@ -193,6 +201,7 @@ enables it. Override at runtime with the standard ASP.NET Core env var:
 { "kind": "Cursor",    "address": 123 }
 { "kind": "Tab" }
 { "kind": "Backspace" }
+{ "kind": "Delete" }
 ```
 
 ## Trace files
