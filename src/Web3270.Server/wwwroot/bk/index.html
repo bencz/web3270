@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>web3270 — TN3270 client</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="toolbar">
+    <input id="host" type="text" placeholder="host" value="localhost" autocomplete="off">
+    <input id="port" type="number" placeholder="port" value="3270" min="1" max="65535">
+    <select id="model">
+        <option value="2">3278-2-E (24x80)</option>
+        <option value="3">3278-3-E (32x80)</option>
+        <option value="4">3278-4-E (43x80)</option>
+        <option value="5">3278-5-E (27x132)</option>
+    </select>
+    <button id="connect">Connect</button>
+    <button id="disconnect" disabled>Disconnect</button>
+
+    <div class="aid-bar">
+        <button data-aid="Enter">Enter</button>
+        <button data-aid="Clear">Clear</button>
+        <button data-aid="PA1">PA1</button>
+        <button data-aid="PA2">PA2</button>
+        <button data-aid="PA3">PA3</button>
+        <button data-aid="PF1">PF1</button>
+        <button data-aid="PF2">PF2</button>
+        <button data-aid="PF3">PF3</button>
+        <button data-aid="PF4">PF4</button>
+        <button data-aid="PF5">PF5</button>
+        <button data-aid="PF6">PF6</button>
+        <button data-aid="PF7">PF7</button>
+        <button data-aid="PF8">PF8</button>
+        <button data-aid="PF9">PF9</button>
+        <button data-aid="PF10">PF10</button>
+        <button data-aid="PF11">PF11</button>
+        <button data-aid="PF12">PF12</button>
+    </div>
+
+    <span id="status">disconnected</span>
+</div>
+
+<canvas id="terminal"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@8.0.7/dist/browser/signalr.min.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
