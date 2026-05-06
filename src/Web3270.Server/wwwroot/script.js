@@ -153,6 +153,18 @@
         };
     }
 
+    // True when `addr` lies inside the cyclic field [start, start+length).
+    // 3270 buffers wrap around, so a field that starts near the end of the
+    // buffer can extend through position 0.
+    function containsAddress(field, addr, size) {
+        if (field.length <= 0)
+            return false;
+        const end = (field.start + field.length) % size;
+        if (field.start <= end)
+            return addr >= field.start && addr < end;
+        return addr >= field.start || addr < end;
+    }
+
     function isCellSelected(row, col) {
         if (!selection)
             return false;
@@ -460,11 +472,21 @@
 
     // ---- Keyboard ----------------------------------------------------------
 
+    // Maps a browser KeyboardEvent to a 3270 AID name. Conventions follow
+    // ISPF / TSO defaults so paging keys feel natural in real workflows:
+    //   PageUp   → PF7  (scroll up)
+    //   PageDown → PF8  (scroll down)
+    //   Escape   → Clear
+    //   F1..F12  → PF1..PF12   (Shift = PF13..PF24)
     function functionKeyName(event) {
         if (event.key === 'Enter')
             return 'Enter';
         if (event.key === 'Escape')
             return 'Clear';
+        if (event.key === 'PageUp')
+            return 'PF7';
+        if (event.key === 'PageDown')
+            return 'PF8';
         if (event.key.startsWith('F') && /^F([1-9]|1[0-9]|2[0-4])$/.test(event.key)) {
             const n = parseInt(event.key.slice(1), 10);
             return event.shiftKey ? `PF${n + 12}` : `PF${n}`;
@@ -520,6 +542,49 @@
         if (event.key === 'Backspace') {
             event.preventDefault();
             sendKey({ kind: 'Backspace' });
+            return;
+        }
+
+        if (event.key === 'Delete') {
+            event.preventDefault();
+            sendKey({ kind: 'Delete' });
+            return;
+        }
+
+        if (event.key === 'Home') {
+            // Jump the terminal cursor to the first unprotected field's
+            // first content position — equivalent to x3270's Home() action.
+            event.preventDefault();
+            if (!snapshot)
+                return;
+            const target = snapshot.fields.find(f => !f.protected);
+            if (target)
+                sendKey({ kind: 'Cursor', address: target.start });
+            return;
+        }
+
+        if (event.key === 'End') {
+            // Move to the end of the current input field (one past the
+            // last typed char), useful for quick edits.
+            event.preventDefault();
+            if (!snapshot)
+                return;
+            const here = snapshot.cursor;
+            const field = snapshot.fields.find(f =>
+                !f.protected && containsAddress(f, here, snapshot.cells.length));
+            if (field) {
+                // Walk forward in the field until we hit a null/space sequence
+                // that runs to the end — that's where the user's text stops.
+                let last = field.start;
+                let p = field.start;
+                for (let n = 0; n < field.length; n++) {
+                    const cell = snapshot.cells[p];
+                    if (cell && cell.glyph && cell.glyph !== ' ' && cell.glyph !== ' ')
+                        last = (p + 1) % snapshot.cells.length;
+                    p = (p + 1) % snapshot.cells.length;
+                }
+                sendKey({ kind: 'Cursor', address: last });
+            }
             return;
         }
 
