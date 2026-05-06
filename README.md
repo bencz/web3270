@@ -8,6 +8,18 @@ SignalR as a structured snapshot, and rendered on an HTML5 canvas.
 [browser canvas] <—SignalR (JSON)—> [ASP.NET Core hub] <—TCP/Telnet—> [mainframe]
 ```
 
+# Screenshots
+
+<img width="1509" height="905" alt="image" src="https://github.com/user-attachments/assets/408dbd04-c461-446a-b02b-7164d34eb7a6" />
+<br/>
+<img width="1509" height="909" alt="image" src="https://github.com/user-attachments/assets/5bf72ad5-7b69-48f8-8061-d7e69cad4107" />
+<br/>
+<img width="1512" height="910" alt="image" src="https://github.com/user-attachments/assets/92ed788e-2ea3-4225-b696-dba0c3476549" />
+<br/>
+<img width="1509" height="908" alt="image" src="https://github.com/user-attachments/assets/f8d0995f-63bf-468b-9a4d-24ea2df341d0" />
+
+
+
 ## What's implemented
 
 ### Telnet / TN3270E layer (RFC 854 / 1205 / 1041 / 2355)
@@ -211,6 +223,3 @@ the parser saw on the wire after IAC framing was stripped.
 - RFC 1205 — TN3270 (plain).
 - RFC 2355 — TN3270E.
 - IBM 3270 Information Display System Data Stream Programmer's Reference.
-- Heavily inspired by [dm3270](https://github.com/dmolony/dm3270),
-  Phil Young's [tn3270lib](https://github.com/mainframed/tn3270lib), and
-  the x3270 family.
