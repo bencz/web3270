@@ -423,7 +423,7 @@
         resizeCanvas();
 
         connection = new signalR.HubConnectionBuilder()
-            .withUrl('http://localhost:5001/hubs/terminal')
+            .withUrl('/hubs/terminal')
             .withAutomaticReconnect()
             .build();
 
