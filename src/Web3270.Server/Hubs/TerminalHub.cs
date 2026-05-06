@@ -89,6 +89,10 @@ public sealed class TerminalHub : Hub
                 session.Backspace();
                 await PushSnapshot(session);
                 break;
+            case "Delete":
+                session.DeleteCharacter();
+                await PushSnapshot(session);
+                break;
             case "Tab":
                 session.TabToNextField();
                 await PushSnapshot(session);
