@@ -545,12 +545,6 @@
             return;
         }
 
-        if (event.key === 'Delete') {
-            event.preventDefault();
-            sendKey({ kind: 'Delete' });
-            return;
-        }
-
         if (event.key === 'Home') {
             // Jump the terminal cursor to the first unprotected field's
             // first content position — equivalent to x3270's Home() action.
