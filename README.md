@@ -166,10 +166,7 @@ enables it. Override at runtime with the standard ASP.NET Core env var:
 | ----------------------------- | ---- | -------------------- |
 | `mainframe.hercules-390.org`  | 3270 | Hercules + MVS 3.8j  |
 | `tn3270.themainframe.org`     | 23   | z/OS                 |
-
-> Do **not** point this client at `pub400.com`. That host is an IBM i
-> (AS/400) and speaks **TN5250** — a different protocol. The TCP and
-> Telnet handshake will succeed, the screen will be empty.
+| `pub400.com`                  | 23   | It works, but with some caveats!!! |
 
 ## Wire format (browser ↔ server)
 
