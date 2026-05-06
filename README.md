@@ -116,7 +116,6 @@ SignalR as a structured snapshot, and rendered on an HTML5 canvas.
 ## Building and running
 
 ```bash
-cd server
 dotnet build
 dotnet run --project src/Web3270.Server
 ```
