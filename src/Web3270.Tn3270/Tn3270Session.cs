@@ -114,47 +114,6 @@ public sealed class Tn3270Session : IAsyncDisposable
         Buffer.CursorAddress = prev;
     }
 
-    /// <summary>
-    /// Deletes the character at the cursor and pulls the rest of the field
-    /// one position to the left — like the Delete key on a real 3270
-    /// terminal. Cursor stays where it is. No-op when the cursor sits on a
-    /// protected field, an attribute byte, or an empty cell.
-    /// </summary>
-    public void DeleteCharacter()
-    {
-        var addr = Buffer.CursorAddress;
-        var field = Buffer.FieldAt(addr);
-        if (field is null || field.Protected)
-            return;
-        var cell = Buffer[addr];
-        if (cell.IsFieldAttribute)
-            return;
-
-        // Shift cells [addr+1 .. fieldEnd] left by one, then NUL-fill the
-        // last position. Stays inside the cyclic field bounds.
-        var p = addr;
-        for (var n = 0; n < field.Length - 1; n++)
-        {
-            var nextAddr = Buffer.Wrap(p + 1);
-            // Stop pulling at the next attribute byte (shouldn't happen
-            // inside a single field but guards against ill-formed buffers).
-            if (Buffer[nextAddr].IsFieldAttribute)
-                break;
-            Buffer[p].Character = Buffer[nextAddr].Character;
-            Buffer[p].Foreground = Buffer[nextAddr].Foreground;
-            Buffer[p].Background = Buffer[nextAddr].Background;
-            Buffer[p].Highlight = Buffer[nextAddr].Highlight;
-            p = nextAddr;
-        }
-        Buffer[p].Character = 0x00;
-        Buffer[p].Modified = true;
-
-        // Mark the run as user-modified and set MDT.
-        Buffer[addr].Modified = true;
-        var attrCell = Buffer[field.AttributePosition];
-        attrCell.Attribute = attrCell.Attribute.WithModified(true);
-    }
-
     public void TabToNextField()
     {
         var fields = Buffer.Fields();
